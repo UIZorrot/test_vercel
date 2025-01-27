@@ -45,14 +45,16 @@ export default function App() {
       try {
         //@ts-ignore
         const ethProvider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await ethProvider.getSigner();
-        const accounts = await ethProvider.send("eth_requestAccounts", []);
-        const contractInstance = new ethers.Contract(contractAddress, ContractAbi.abi, signer);
+        const accounts = await ethProvider.listAccounts();
+        if (accounts.length > 0) {
+          const signer = await ethProvider.getSigner();
+          const contractInstance = new ethers.Contract(contractAddress, ContractAbi.abi, signer);
 
-        setAccount(accounts[0].address);
-        setProvider(ethProvider);
-        setContract(contractInstance);
-        console.log("Wallet connected:", accounts[0]);
+          setAccount(accounts[0].address);
+          setProvider(ethProvider);
+          setContract(contractInstance);
+          console.log("Wallet connected:", accounts[0]);
+        }
       } catch (error) {
         console.error("Failed to connect wallet:", error);
       }
@@ -212,7 +214,7 @@ export default function App() {
 
               <div style={{ marginTop: "40px", display: "flex", gap: "10px" }}>
                 {handCards.length === 0 ? (
-                  <p>你的手牌是空的，请点击按钮抽牌。</p>
+                  <p>Your hand is now empty</p>
                 ) : (
                   handCards.map((card, index) => (
                     <button key={index} className="hand-card">
