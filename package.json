@@ -1,0 +1,50 @@
+{
+  "name": "wof-app",
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "@types/antd": "^1.0.4",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.3",
+    "antd": "^5.23.2",
+    "cra-template-typescript": "1.2.0",
+    "ethers": "^6.13.5",
+    "metamask-react": "^2.7.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "5.0.1",
+    "typescript": "^5.7.3",
+    "web-vitals": "^4.2.4",
+    "web3": "^4.16.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
+  },
+  "packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72"
+}
