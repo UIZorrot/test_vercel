@@ -7,6 +7,12 @@ import { Button } from "antd";
 import * as fs from 'fs';
 import ContractAbi from "./WOF.json";
 import Rules from "./rules";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount, useContractWrite, useContractRead } from 'wagmi';
+
+export const YourApp = () => {
+  return <ConnectButton />;
+};
 
 declare global {
   interface window { ethereum: any; }
@@ -23,7 +29,6 @@ export default function App() {
   const [prizePool, setPrizePool] = useState(0); // 奖池金额
 
   const contractAddress = "0x4c2fA6755CF13aBF4c30010E4519e98f76bFF29E";
-  const monadRpcUrl = "https://rpc-devnet.monadinfra.com/rpc/3fe540e310bbb6ef0b9f16cd23073b0a";
 
   const suits = ["♦️", "♠️", "♥️", "♣️", "🔺", "⭐", "⚡", "🌟"];
   const numbers = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
@@ -38,30 +43,30 @@ export default function App() {
     setShowRules(true);
   };
 
-  // **初始化合约和钱包连接**
-  const connectWallet = async () => {
-    //@ts-ignore
-    if (window.ethereum) {
-      try {
-        //@ts-ignore
-        const ethProvider = new ethers.BrowserProvider(window.ethereum);
-        const accounts = await ethProvider.listAccounts();
-        if (accounts.length > 0) {
-          const signer = await ethProvider.getSigner();
-          const contractInstance = new ethers.Contract(contractAddress, ContractAbi.abi, signer);
+  // // **初始化合约和钱包连接**
+  // const connectWallet = async () => {
+  //   //@ts-ignore
+  //   if (window.ethereum) {
+  //     try {
+  //       //@ts-ignore
+  //       const ethProvider = new ethers.BrowserProvider(window.ethereum);
+  //       const accounts = await ethProvider.listAccounts();
+  //       if (accounts.length > 0) {
+  //         const signer = await ethProvider.getSigner();
+  //         const contractInstance = new ethers.Contract(contractAddress, ContractAbi.abi, signer);
 
-          setAccount(accounts[0].address);
-          setProvider(ethProvider);
-          setContract(contractInstance);
-          console.log("Wallet connected:", accounts[0]);
-        }
-      } catch (error) {
-        console.error("Failed to connect wallet:", error);
-      }
-    } else {
-      console.error("MetaMask not found. Please install MetaMask.");
-    }
-  };
+  //         setAccount(accounts[0].address);
+  //         setProvider(ethProvider);
+  //         setContract(contractInstance);
+  //         console.log("Wallet connected:", accounts[0]);
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to connect wallet:", error);
+  //     }
+  //   } else {
+  //     console.error("MetaMask not found. Please install MetaMask.");
+  //   }
+  // };
 
   // **检测钱包是否已连接**
   const checkWalletConnection = async () => {
@@ -131,13 +136,20 @@ export default function App() {
     checkWalletConnection();
   }, []);
 
-  // **抽牌函数**
   const drawCard = async () => {
-    if (!contract || !account) return;
+    if (!contract || !account) {
+      console.log("No contract or account available.");
+      return;
+    }
 
     try {
-      const tx = await contract.drawCard({ value: ethers.parseEther(drawPrice.toString()) });
-      await tx.wait(); // 等待交易完成
+      // 调用合约的抽卡函数
+      const tx = await contract.drawCard({
+        value: ethers.parseEther(drawPrice.toString()),  // 设置合约的交易金额
+      });
+
+      // 等待交易完成
+      await tx.wait();
       console.log("Card drawn successfully!");
     } catch (error) {
       console.error("Failed to draw card:", error);
@@ -158,16 +170,15 @@ export default function App() {
             <div className="connect-button" style={{ marginRight: 20 }}>
 
               {!account ? (
-                <Button type="primary" style={{ marginTop: 5 }} onClick={connectWallet}>
-                  Connect Wallet
-                </Button>
+                <ConnectButton />
               ) : (
-                <Button type="primary" style={{ marginTop: 5 }}>{account.slice(0, 6)}...{account.slice(-6)}</Button>
+                <ConnectButton />
+
               )}
             </div>
           </div>
 
-
+          {/* <Button type="primary" style={{ marginTop: 5 }}>{account.slice(0, 6)}...{account.slice(-6)}</Button> */}
 
           {showRules ? (
             <Rules />
