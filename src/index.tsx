@@ -23,7 +23,6 @@ import {
 } from "@tanstack/react-query";
 
 
-
 const monad = {
   id: 20143,
   name: 'monad',
